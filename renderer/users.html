@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Test</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
+  </head>
+  
+  <body>
+	  <h4 class="title is-4">Users</h4>
+    
+    <!-- dropdown-->
+    <div class="dropdown">
+      <div class="dropdown-trigger">
+          <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3">
+          <span>Users</span>
+          <span class="icon is-small">
+            <i class="fas fa-angle-down" aria-hidden="true"></i>
+          </span>
+        </button>
+      </div>
+      <div class="dropdown-menu" id="dropdown-menu3" role="menu">
+        <div class="dropdown-content">
+          <a id="selectAssets" href="#" class="dropdown-item">
+            Assets
+          </a>
+          <a id="selectUsers" href="#" class="dropdown-item">
+            Users
+          </a>
+        </div>
+      </div>
+    </div>
+    <script>
+      //used for the dropdown
+      var dropdown = document.querySelector('.dropdown');
+      dropdown.addEventListener('click', function(event) {
+        event.stopPropagation();
+        dropdown.classList.toggle('is-active');
+      });
+    </script>
+    <!-- End of dropdown-->
+    <div class="table-container">
+      <p class="mt-4"><table id="dataTable" class="table is-hoverbale is-striped is-fullwidth "></p>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Table body will be populated dynamically -->
+        </tbody>
+    </table>
+    </div>
+    <div>
+      <p class="mt-2">
+        <button id="btnInsert" class="button" >Add new Record</button>
+      </p>
+    </div>
+    <script defer src="./js/winChange.js"></script>
+    <script defer src="./js/sqlUsers.js"></script>
+  </body> 
+</html>
