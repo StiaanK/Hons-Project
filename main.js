@@ -62,8 +62,6 @@ function createMainWindow(){
         mainWindow.loadFile(path.join(__dirname,'./renderer/assets.html'));
         console.log("assets")
         tableName="assets"
-
-        
     })
 
     ipcMain.handle('goToUsers',async(event,goToAssets)=>{
@@ -75,6 +73,11 @@ function createMainWindow(){
     ipcMain.handle('goToAddAssets',async(event, goToAddAssets)=>{
         mainWindow.loadFile(path.join(__dirname,'./renderer/addAssets.html'));
         console.log("addAssets")
+    })
+
+    ipcMain.handle('goToEditAssets',async(event,goToEditAssets)=>{
+        mainWindow.loadFile(path.join(__dirname,'./renderer/editAssets.html'));
+        console.log("editAssets")
     })
 
     // SQL

@@ -5,7 +5,8 @@ const sqlite3 = require('sqlite3').verbose();
 contextBridge.exposeInMainWorld('htmlChange',{
     goToAssets: () => ipcRenderer.invoke('goToAssets','goToAssets'),
     goToUsers: ()=> ipcRenderer.invoke('goToUsers','goToUsers'),
-    goToAddAssets: ()=> ipcRenderer.invoke('goToAddAssets','goToAddAssets')
+    goToAddAssets: ()=> ipcRenderer.invoke('goToAddAssets','goToAddAssets'), 
+    goToEditAssets: () => ipcRenderer.invoke('goToEditAssets','goToEditAssets'),
 })
 
 contextBridge.exposeInMainWorld('sqlite',{
