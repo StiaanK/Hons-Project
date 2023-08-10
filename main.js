@@ -1,5 +1,5 @@
 //backend script
-const {app, BrowserView, BrowserWindow, ipcMain }= require('electron')
+const {app, BrowserView, BrowserWindow, ipcMain, dialog }= require('electron')
 const path = require('path')
 const sqlite3 = require('sqlite3').verbose()
 
@@ -46,6 +46,16 @@ function createMainWindow(){
     mainWindow.loadFile(path.join(__dirname,'./renderer/index.html'));
     mainWindow.webContents.openDevTools();
     
+
+    //show a messagebox
+    ipcMain.on('showMessageBox', (event, message) =>{
+        dialog.showMessageBox(mainWindow, {
+            type: 'info',
+            title: 'Info',
+            message: message,
+            buttons: ['OK']
+    })
+})
 
     //htmlChange
     ipcMain.handle('goToAssets',async(event,goToAssets)=>{
@@ -124,7 +134,8 @@ app.on('window-all-closed', () => {
     }
 })
 
-ipcMain.on('dataFromRenderer', (event, data) => {
+//add data to asset table
+ipcMain.on('sendAssetData', (event, data) => {
     console.log('Data received from renderer:', data);
 
     const  name  = data;
@@ -141,6 +152,15 @@ ipcMain.on('dataFromRenderer', (event, data) => {
     });
 })
 
-/*ipcMain.on('addAsset', async (event, data) => {
-    
-});*/
+
+//delete a row
+ipcMain.on('deleteRow', (event,{ tableName, rowId})=>{
+    sql =`DELETE FROM ${tableName} WHERE id = ${rowId} `
+
+    db.run(sql,[],(err)=>{
+        if(err) return console.error(err.message);
+    })
+    console.log("Row is deleted")
+})
+
+

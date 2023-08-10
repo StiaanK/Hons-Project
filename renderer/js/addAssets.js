@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Reset the form
         form.reset();
         btnCancel.innerHTML ="Go Back"
-        //TODO: notify user
+        
+        //notifying user
+        const nBody = 'Asset was added!'
+        window.message.show(nBody)
     });
 });

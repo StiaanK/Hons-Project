@@ -19,10 +19,21 @@ contextBridge.exposeInMainWorld('sqlite',{
             }
             callback(rows)
         })
-    }
+    },
+    
+    deleteRow: (tableName, rowId) => {
+        ipcRenderer.send('deleteRow', {tableName, rowId})  
+    },
 })
 
-
+//send data to main to add to asset table
 contextBridge.exposeInMainWorld('sendAssetData', (data) => {
-    ipcRenderer.send('dataFromRenderer', data);
+    ipcRenderer.send('sendAssetData', data);
+})
+
+//used to send messageboxes
+contextBridge.exposeInMainWorld('message',{
+    show: (message) =>{
+        ipcRenderer.send('showMessageBox', message);
+    }
 })
