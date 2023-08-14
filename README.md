@@ -9,6 +9,18 @@
 4. var makes a variable global
 5. const only works in { } block 
 
+## Table columns
+- assets
+    - id
+    - name
+    - sn (serial number)
+    - bookedBy
+- users
+    - id
+    - name
+    - un (university number)
+
+
 ## TODO
 1. make html pages for each table
     - assets
@@ -16,16 +28,9 @@
             - add
                 - idiot proof
             - remove
-                - make html
-                - preload
-                - function
-                - notify user
+                - idiot proof
             - edit
-                - make html
-                - preload
-                - function
-                - allow user to delete from edit
-                - notify user
+                - idiot proof
     - user
         - functions
             - add

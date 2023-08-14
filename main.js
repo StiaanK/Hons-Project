@@ -1,4 +1,5 @@
 //backend script
+const { rejects } = require('assert');
 const {app, BrowserView, BrowserWindow, ipcMain, dialog }= require('electron')
 const path = require('path')
 const sqlite3 = require('sqlite3').verbose()
@@ -56,6 +57,11 @@ function createMainWindow(){
             buttons: ['OK']
     })
 })
+    /*
+    ipcMain.on('sendId', (event, data)=>{
+        mainWindow.webContents.send('recieveId',data)
+        console.log("sending id: "+data)
+    })*/
 
     //htmlChange
     ipcMain.handle('goToAssets',async(event,goToAssets)=>{
@@ -165,5 +171,32 @@ ipcMain.on('deleteRow', (event,{ tableName, rowId})=>{
     })
     console.log("Row is deleted")
 })
+
+
+
+let rowId
+ipcMain.on('sendId', (event, data) => {
+    rowId = data
+    console.log("rowId set to : "+rowId)
+})
+
+
+//edit asset data 
+ipcMain.on('editAssetData', (event, data) => {
+    console.log('Data received from renderer:', data);
+
+    const  name  = data;
+    const sql = `UPDATE assets SET name = '${name}' WHERE id = ${rowId}`;
+
+    db.run(sql,[],(err)=>{
+        if(err) return console.error(err.message);
+    })
+    console.log("Row is edited")
+    rowId = null
+
+});
+
+
+
 
 

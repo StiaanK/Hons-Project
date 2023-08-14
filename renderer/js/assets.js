@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
         tr.innerHTML = `
           <td>${row.id}</td>
           <td>${row.name}</td>
+          <td>${row.sn}</td>
+          <td>${row.userId}</td>
         `;
         tr.addEventListener('click', () => {
           // Function to handle row selection (you can do anything with the selected data here)
@@ -43,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //get the id of the selected row
 });
 
-let rowId
+let rowId = null
 function setRowID(e){
   rowId = e
 }
@@ -57,17 +59,36 @@ btnInsert.addEventListener('click', ()=>{
 //Remove a record
 const btnRemove = document.getElementById('btnRemove')
 btnRemove.addEventListener('click', ()=>{
-  window.sqlite.deleteRow('assets',rowId)
+  
+
+  if (rowId !== null){
+    window.sqlite.deleteRow('assets',rowId)
+    rowId = null
+    const nBody = 'Asset was Deleted!'
+    window.message.show(nBody)
+    location.reload()
+  }
+  else{
+    window.message.show('nothing')
+  }
+
   rowId = null
-  const nBody = 'Asset was Deleted!'
-  window.message.show(nBody)
-  location.reload()
 }) 
 
 //edit a record 
 const btnEdit= document.getElementById('btnEdit')
 btnEdit.addEventListener('click', ()=>{
-  window.htmlChange.goToEditAssets()
+  
+  if (rowId !== null){
+    window.sendId(rowId)
+    window.htmlChange.goToEditAssets()
+  }
+  else{
+    window.message.show('nothing')
+  }
+
+  rowId = null
+  
 })
 
 
