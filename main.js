@@ -147,10 +147,11 @@ app.on('window-all-closed', () => {
 ipcMain.on('sendAssetData', (event, data) => {
     console.log('Data received from renderer:', data);
 
-    const  name  = data;
-    const sql = `INSERT INTO assets (name) VALUES (?)`;
+    const  name  = data.name;
+    const sn = data.sn
+    const sql = `INSERT INTO assets (name, sn) VALUES (?,?)`;
 
-    db.run(sql, [name], (err) => {
+    db.run(sql, [name,sn], (err) => {
         if (err) {
             console.error('Error inserting data:', err.message);
             event.reply('insertDataResponse', { success: false, error: err.message });
@@ -185,8 +186,19 @@ ipcMain.on('sendId', (event, data) => {
 ipcMain.on('editAssetData', (event, data) => {
     console.log('Data received from renderer:', data);
 
-    const  name  = data;
-    const sql = `UPDATE assets SET name = '${name}' WHERE id = ${rowId}`;
+    const  name  = data.name;
+    const sn = data.sn
+    var sql = ``;
+
+    if(name ==''){
+        sql = `UPDATE assets SET sn= '${sn}' WHERE id = ${rowId}`;
+    }
+    else if(sn==''){
+        sql = `UPDATE assets SET name = '${name}' WHERE id = ${rowId}`;
+    }
+    else{
+        sql = `UPDATE assets SET name = '${name}', sn= '${sn}' WHERE id = ${rowId}`;
+    }
 
     db.run(sql,[],(err)=>{
         if(err) return console.error(err.message);

@@ -15,10 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
         
         const name = form.inName.value
+        const sn = form.inSN.value
 
-
+        
         // Call the exposed `insertData` method from the preload.js file
-        window.sendAssetData(name);
+        window.sendAssetData({name, sn});
         
         // Reset the form
         form.reset();

@@ -1,6 +1,6 @@
 const sender = window.send 
 const btnCancel = document.getElementById('btnCancel')
-const rowId = ''
+const rowColNum = ''
 const name =  document.getElementById('inName')
 
 
@@ -11,16 +11,29 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
         
         const name = form.inName.value
+        const sn = form.inSN.value
 
+        if( (name=='')&&(sn=='')){
+            //notifying user
+            const nBody = 'All fields were empty'
+            window.message.show(nBody)
+            window.htmlChange.goToAssets()
+        }
+        else{
+            // Call the exposed `insertData` method from the preload.js file
+            window.editAssetData({name, sn});
+            //notifying user
+            const nBody = 'Asset was edited!'
+            window.message.show(nBody)
 
-        // Call the exposed `insertData` method from the preload.js file
-        window.editAssetData(name);
+            window.htmlChange.goToAssets()
+        }
+
         
-        //notifying user
-        const nBody = 'Asset was edited!'
-        window.message.show(nBody)
+         
 
-        window.htmlChange.goToAssets()
+        
+        
     });
 });
 
