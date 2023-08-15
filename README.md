@@ -32,6 +32,7 @@
             - edit
                 - idiot proof
     - user
+        - fix table
         - functions
             - add
                 - make html

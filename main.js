@@ -55,25 +55,14 @@ function createMainWindow(){
             title: 'Info',
             message: message,
             buttons: ['OK']
+        })
     })
-})
-    /*
-    ipcMain.on('sendId', (event, data)=>{
-        mainWindow.webContents.send('recieveId',data)
-        console.log("sending id: "+data)
-    })*/
-
-    //htmlChange
+   
+    //htmlChange for Assets
     ipcMain.handle('goToAssets',async(event,goToAssets)=>{
         mainWindow.loadFile(path.join(__dirname,'./renderer/assets.html'));
         console.log("assets")
         tableName="assets"
-    })
-
-    ipcMain.handle('goToUsers',async(event,goToAssets)=>{
-        mainWindow.loadFile(path.join(__dirname,'./renderer/users.html'));
-        console.log("users")
-        tableName="users"
     })
 
     ipcMain.handle('goToAddAssets',async(event, goToAddAssets)=>{
@@ -86,42 +75,24 @@ function createMainWindow(){
         console.log("editAssets")
     })
 
-    // SQL
-    /*
-    ipcMain.on('addAsset',(name)=>{
-        console.log(name)
-        
-        
-        sql = 'INSERT INTO assets(name) VALUES(?)';
-        db.run(sql,[String(name)],(err)=>{
-            if(err) return console.error(err.message);
-        })
-        console.log("data inserted into asstes") 
-    })
-    
-
-    ipcMain.handle('createTable',async(event, createTable)=>{
-        sql = 'CREATE TABLE users(id INTEGER PRIMARY KEY, uname, password)';
-        db.run(sql)
-        console.log("table created")
+    //htmlChange for Users
+    ipcMain.handle('goToUsers',async(event,goToAssets)=>{
+        mainWindow.loadFile(path.join(__dirname,'./renderer/users.html'));
+        console.log("users")
+        tableName="users"
     })
 
-    ipcMain.handle('dropTable',async(event, dropTable)=>{
-        sql = 'DROP table users';
-        db.run(sql)
-        console.log("table droped")
+    ipcMain.handle('goToAddUsers',async(event, goToAddUsers)=>{
+        mainWindow.loadFile(path.join(__dirname,'./renderer/addUsers.html'));
+        console.log("addUsers")
     })
 
-    ipcMain.handle('insertData',async(event, insertData)=>{
-        sql = 'INSERT INTO users(uname,password) VALUES(?,?)';
-        db.run(sql,['mike','pass'],(err)=>{
-            if(err) return console.error(err.message);
-        })
-        console.log("data inserted")
+    ipcMain.handle('goToEditUsers',async(event,goToEditUsers)=>{
+        mainWindow.loadFile(path.join(__dirname,'./renderer/editUsers.html'));
+        console.log("editUsers")
     })
-    */
+
 }
-
 
 
 //running app
@@ -143,7 +114,7 @@ app.on('window-all-closed', () => {
     }
 })
 
-//add data to asset table
+//add data to assets table
 ipcMain.on('sendAssetData', (event, data) => {
     console.log('Data received from renderer:', data);
 
@@ -162,6 +133,24 @@ ipcMain.on('sendAssetData', (event, data) => {
     });
 })
 
+//add data to users table
+ipcMain.on('sendUserData', (event, data) => {
+    console.log('Data received from renderer:', data);
+
+    const  name  = data.name;
+    const un = data.un
+    const sql = `INSERT INTO users (name, un) VALUES (?,?)`;
+
+    db.run(sql, [name,un], (err) => {
+        if (err) {
+            console.error('Error inserting data:', err.message);
+            event.reply('insertDataResponse', { success: false, error: err.message });
+        } else {
+            console.log('Data inserted successfully.');
+            event.reply('insertDataResponse', { success: true });
+        }
+    });
+})
 
 //delete a row
 ipcMain.on('deleteRow', (event,{ tableName, rowId})=>{
@@ -170,7 +159,7 @@ ipcMain.on('deleteRow', (event,{ tableName, rowId})=>{
     db.run(sql,[],(err)=>{
         if(err) return console.error(err.message);
     })
-    console.log("Row is deleted")
+    console.log("Row is deleted from" + tableName)
 })
 
 
@@ -203,12 +192,37 @@ ipcMain.on('editAssetData', (event, data) => {
     db.run(sql,[],(err)=>{
         if(err) return console.error(err.message);
     })
-    console.log("Row is edited")
+    console.log("Asset Row is edited")
     rowId = null
 
 });
 
 
+//edit user data 
+ipcMain.on('editUserData', (event, data) => {
+    console.log('Data received from renderer:', data);
+
+    const  name  = data.name;
+    const un = data.un
+    var sql = ``;
+
+    if(name ==''){
+        sql = `UPDATE users SET un= '${un}' WHERE id = ${rowId}`;
+    }
+    else if(un==''){
+        sql = `UPDATE users SET name = '${name}' WHERE id = ${rowId}`;
+    }
+    else{
+        sql = `UPDATE users SET name = '${name}', un= '${un}' WHERE id = ${rowId}`;
+    }
+
+    db.run(sql,[],(err)=>{
+        if(err) return console.error(err.message);
+    })
+    console.log("User Row is edited")
+    rowId = null
+
+});
 
 
 

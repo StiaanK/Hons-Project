@@ -8,6 +8,8 @@ contextBridge.exposeInMainWorld('htmlChange',{
     goToUsers: ()=> ipcRenderer.invoke('goToUsers','goToUsers'),
     goToAddAssets: ()=> ipcRenderer.invoke('goToAddAssets','goToAddAssets'), 
     goToEditAssets: () => ipcRenderer.invoke('goToEditAssets','goToEditAssets'),
+    goToAddUsers: () =>ipcRenderer.invoke('goToAddUsers','goToAddUsers'), 
+    goToEditUsers: () => ipcRenderer.invoke('goToEditUsers','goToEditUsers'),
 })
 
 
@@ -29,10 +31,6 @@ contextBridge.exposeInMainWorld('sqlite',{
         ipcRenderer.send('deleteRow', {tableName, rowId})  
     },
 
-    getRecordData: (tableName) => {
-        ipcRenderer.send('getRecordData' , tableName);
-    },
-
 })
 
 //send data to main to add to asset table
@@ -40,8 +38,19 @@ contextBridge.exposeInMainWorld('sendAssetData', (data) => {
     ipcRenderer.send('sendAssetData', data);
 })
 
+//send data to main to edit an asset record
 contextBridge.exposeInMainWorld('editAssetData',(data) =>{
     ipcRenderer.send('editAssetData', data);
+})
+
+//send data to main to add to user table
+contextBridge.exposeInMainWorld('sendUserData', (data) => {
+    ipcRenderer.send('sendUserData', data);
+})
+
+//send data to main to edit an user record
+contextBridge.exposeInMainWorld('editUserData',(data) =>{
+    ipcRenderer.send('editUserData', data);
 })
 
 contextBridge.exposeInMainWorld('sendId', (data) => {
