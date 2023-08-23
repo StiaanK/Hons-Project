@@ -1,7 +1,7 @@
 const sender = window.send 
 const btnCancel = document.getElementById('btnCancel')
-const rowColNum = ''
-const name =  document.getElementById('inName')
+
+
 
 
 
@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const name = form.inName.value
         const sn = form.inSN.value
+
 
         if( (name=='')&&(sn=='')){
             //notifying user
@@ -28,12 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             window.htmlChange.goToAssets()
         }
-
-        
-         
-
-        
-        
     });
 });
 

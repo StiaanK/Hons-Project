@@ -8,57 +8,89 @@
     <title>Test</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    
+    <style>
+      .table-container {
+        max-height: 200px; /* Adjust this value as needed */
+        overflow-y: auto;
+      }
+    </style>
   </head>
   
   <body>
-	  <h4 class="title is-4">Assets</h4>
-    
-    <!-- dropdown-->
-    <div class="dropdown">
-      <div class="dropdown-trigger">
-        <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3">
-          <span>Assets</span>
-          <span class="icon is-small">
-            <i class="fas fa-angle-down" aria-hidden="true"></i>
-          </span>
-        </button>
-      </div>
-      <div class="dropdown-menu" id="dropdown-menu3" role="menu">
-        <div class="dropdown-content">
-          <a id="selectAssets" href="#" class="dropdown-item">
-            Assets
-          </a>
-          <a id="selectUsers" href="#" class="dropdown-item">
-            Users
-          </a>
+    <div>
+      <section class="section">
+        <div class="container">
+          <div class="columns is-mobile">
+            <div class="column is-half">
+              <div class="field">
+                <p class="control">
+                  <!-- dropdown-->
+                  <div class="dropdown"> 
+                    <button  class="button is-large" aria-haspopup="true" aria-controls="dropdown-menu3"> 
+                    <div class="dropdown-trigger">
+                      <span> Assets </span>
+                      <span class="icon is-small">
+                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                      </span>
+                  </div>
+                  <div class="dropdown-menu" id="dropdown-menu3" role="menu">
+                    <div class="dropdown-content">
+                      <a id="selectAssets" href="#" class="dropdown-item">
+                        Assets
+                      </a>
+                      <a id="selectUsers" href="#" class="dropdown-item">
+                        Users
+                      </a>
+                      <a id="selectBookings" href="#" class="dropdown-item">
+                        Bookings
+                      </a>
+                    </div></button>
+                  </div>
+                <div> 
+              </div>
+              <script>
+                //used for the dropdown
+                var dropdown = document.querySelector('.dropdown');
+                dropdown.addEventListener('click', function(event) {
+                  event.stopPropagation();
+                  dropdown.classList.toggle('is-active');
+                });
+              </script>
+              <!-- End of dropdown-->
+              </div>
+            </div>
+            <div class="column is-half">
+              <div class="field has-addons">
+                <p class="control has-icons-left">
+                  <input id="inSearch" class="input" type="text" placeholder="Search">
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-search"></i>
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
+      </section>
+      
+    <div class="container">
+      <div class="table-container">
+        <table id="dataTable" class="table is is-hoverbale is-striped is-fullwidth">
+          <thead>
+              <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Serial Num</th>
+                  <th>UserId</th>
+              </tr>
+          </thead>
+          <tbody>
+              <!-- Table body will be populated dynamically -->
+          </tbody>
+        </table>
       </div>
     </div>
-    <script>
-      //used for the dropdown
-      var dropdown = document.querySelector('.dropdown');
-      dropdown.addEventListener('click', function(event) {
-        event.stopPropagation();
-        dropdown.classList.toggle('is-active');
-      });
-    </script>
-    <!-- End of dropdown-->
-    <div class="table-container">
-      <p class="mt-4"><table id="dataTable" class="table is is-hoverbale is-striped is-fullwidth"></p>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Serial Num</th>
-                <th>UserId</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Table body will be populated dynamically -->
-        </tbody>
-    </table>
-    </div>
-
     <div>
       <p class="mt-2">
         <button id="btnInsert" class="button" >Add new record</button>

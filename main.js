@@ -76,7 +76,7 @@ function createMainWindow(){
     })
 
     //htmlChange for Users
-    ipcMain.handle('goToUsers',async(event,goToAssets)=>{
+    ipcMain.handle('goToUsers',async(event,goToUsers)=>{
         mainWindow.loadFile(path.join(__dirname,'./renderer/users.html'));
         console.log("users")
         tableName="users"
@@ -92,6 +92,13 @@ function createMainWindow(){
         console.log("editUsers")
     })
 
+
+    //html change for bookings
+    ipcMain.handle('goToBookings',async(event,goToBookings)=>{
+        mainWindow.loadFile(path.join(__dirname,'./renderer/bookings.html'));
+        console.log("bookings")
+        tableName="bookings"
+    })
 }
 
 
@@ -177,7 +184,10 @@ ipcMain.on('editAssetData', (event, data) => {
 
     const  name  = data.name;
     const sn = data.sn
+    const userId = data.userId
     var sql = ``;
+
+    console.log(userId)
 
     if(name ==''){
         sql = `UPDATE assets SET sn= '${sn}' WHERE id = ${rowId}`;
@@ -224,5 +234,8 @@ ipcMain.on('editUserData', (event, data) => {
 
 });
 
-
+/*/populate User dropdown menu
+ipcMain.handle('popUserDrop',async(event,popUserDrop)=>{
+    
+})*/
 

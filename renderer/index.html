@@ -11,38 +11,39 @@
   </head>
   
   <body>
-	  <h4 class="title is-4">Hello world</h4>
-    
     <!-- dropdown-->
-    <div class="dropdown">
+    <div class="dropdown"> 
+      <button  class="button is-large" aria-haspopup="true" aria-controls="dropdown-menu3"> 
       <div class="dropdown-trigger">
-        <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3">
-          <span>Select Table</span>
-          <span class="icon is-small">
-            <i class="fas fa-angle-down" aria-hidden="true"></i>
-          </span>
-        </button>
-      </div>
-      <div class="dropdown-menu" id="dropdown-menu3" role="menu">
-        <div class="dropdown-content">
-          <a id="selectAssets" href="#" class="dropdown-item">
-            Assets
-          </a>
-          <a id="selectUsers" href="#" class="dropdown-item">
-            Users
-          </a>
-        </div>
-      </div>
+        <span> Select a table</table> </span>
+        <span class="icon is-small">
+          <i class="fas fa-angle-down" aria-hidden="true"></i>
+        </span>
     </div>
-    <script>
-      //used for the dropdown
-      var dropdown = document.querySelector('.dropdown');
-      dropdown.addEventListener('click', function(event) {
-        event.stopPropagation();
-        dropdown.classList.toggle('is-active');
-      });
-    </script>
-    <!-- End of dropdown-->
+    <div class="dropdown-menu" id="dropdown-menu3" role="menu">
+      <div class="dropdown-content">
+        <a id="selectAssets" href="#" class="dropdown-item">
+          Assets
+        </a>
+        <a id="selectUsers" href="#" class="dropdown-item">
+          Users
+        </a>
+        <a id="selectBookings" href="#" class="dropdown-item">
+          Bookings
+        </a>
+      </div></button>
+    </div>
+  <div> 
+</div>
+<script>
+  //used for the dropdown
+  var dropdown = document.querySelector('.dropdown');
+  dropdown.addEventListener('click', function(event) {
+    event.stopPropagation();
+    dropdown.classList.toggle('is-active');
+  });
+</script>
+<!-- End of dropdown-->
 
     <!--<div>
       <p class="mb-2">

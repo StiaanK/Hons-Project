@@ -25,6 +25,7 @@
 1. make html pages for each table
     - assets
         - functions
+            - search
             - add
                 - idiot proof
             - remove
@@ -34,6 +35,7 @@
     - user
         - fix table
         - functions
+            - search
             - add
                 - make html
                 - preload

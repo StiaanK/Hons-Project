@@ -3,13 +3,16 @@ const {contextBridge, ipcRenderer} = require('electron');
 const { channel } = require('diagnostics_channel');
 const sqlite3 = require('sqlite3').verbose();
 
+
 contextBridge.exposeInMainWorld('htmlChange',{
     goToAssets: () => ipcRenderer.invoke('goToAssets','goToAssets'),
     goToUsers: ()=> ipcRenderer.invoke('goToUsers','goToUsers'),
+    goToBookings: () => ipcRenderer.invoke('goToBookings', 'goToBookings'),
     goToAddAssets: ()=> ipcRenderer.invoke('goToAddAssets','goToAddAssets'), 
     goToEditAssets: () => ipcRenderer.invoke('goToEditAssets','goToEditAssets'),
     goToAddUsers: () =>ipcRenderer.invoke('goToAddUsers','goToAddUsers'), 
     goToEditUsers: () => ipcRenderer.invoke('goToEditUsers','goToEditUsers'),
+    
 })
 
 
@@ -65,6 +68,16 @@ contextBridge.exposeInMainWorld('recieveId', (callback)=>{
 
 })
 
+contextBridge.exposeInMainWorld('popUserDrop', (callback)=>{
+    const db = new sqlite3.Database(path.join(__dirname,'./test.db'))
+    db.all('SELECT name FROM users', (err,rows)=>{
+        if(err){
+            console.error(err.message)
+            return
+        }
+        callback(rows)
+    })
+})
 
 //used to display messageboxes
 contextBridge.exposeInMainWorld('message',{
