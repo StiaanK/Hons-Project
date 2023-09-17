@@ -1,31 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Test</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+</head>
+<body>
+    <h4 class="title is-4">Edit an Asset</h4>
+    <form id="form-Asset">
+        <div>
+            <label class="label">Asset Name</label><input type="text" class="input" id="inName">
+            <label class="label">Asset Serial Number</label> <input id="inSN" class="input" type="text">
+            <label class="label">Date Added:</label><input type="date" class="input" id="inDate">
+            <label class="label">Asset custodian</label> <input id="inUserId" class="input" type="text">
+        </div>
 
-  </head>
-  
-  <body>
-	<h4 class="title is-4">Edit an Asset</h4>
-  <form id="form-Asset"> 
-    <div>
-      Asset name: <input  type="text" class="input" id="inName" >
-      Asset Serial Number: <input id="inSN" class="input" type="text">
-    </div>
-    <div>
-      <p class="mt-2">
-        <button id="btnEdit" type="submit" class="button" >Edit record</button>
-      </p> 
-    </div>
-</form> 
-<button id="btnCancel" class="button" >Cancel</button>
-      
-    <script defer src="./js/editAssets.js"> </script>
+        <div>
+            <p class="mt-2">
+                <button id="btnEdit" type="submit" class="button">Edit record</button>
+            </p>
+        </div>
+    </form>
+    <button id="btnCancel" class="button">Cancel</button>
+
+    <script defer src="./js/editAssets.js"></script>
     <!--<script defer src="./js/addAssets.js"></script>-->
-  </body> 
+</body>
 </html>

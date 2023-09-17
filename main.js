@@ -91,14 +91,6 @@ function createMainWindow(){
         mainWindow.loadFile(path.join(__dirname,'./renderer/editUsers.html'));
         console.log("editUsers")
     })
-
-
-    //html change for bookings
-    ipcMain.handle('goToBookings',async(event,goToBookings)=>{
-        mainWindow.loadFile(path.join(__dirname,'./renderer/bookings.html'));
-        console.log("bookings")
-        tableName="bookings"
-    })
 }
 
 
@@ -127,9 +119,10 @@ ipcMain.on('sendAssetData', (event, data) => {
 
     const  name  = data.name;
     const sn = data.sn
-    const sql = `INSERT INTO assets (name, sn) VALUES (?,?)`;
+    const dateAdded = data.dateAdded
+    const sql = `INSERT INTO assets (name, sn, dateAdded) VALUES (?,?,?)`;
 
-    db.run(sql, [name,sn], (err) => {
+    db.run(sql, [name,sn,dateAdded], (err) => {
         if (err) {
             console.error('Error inserting data:', err.message);
             event.reply('insertDataResponse', { success: false, error: err.message });
@@ -182,30 +175,54 @@ ipcMain.on('sendId', (event, data) => {
 ipcMain.on('editAssetData', (event, data) => {
     console.log('Data received from renderer:', data);
 
-    const  name  = data.name;
-    const sn = data.sn
-    const userId = data.userId
-    var sql = ``;
+    const { name, sn, userId, dateAdded } = data;
 
-    console.log(userId)
-
-    if(name ==''){
-        sql = `UPDATE assets SET sn= '${sn}' WHERE id = ${rowId}`;
-    }
-    else if(sn==''){
-        sql = `UPDATE assets SET name = '${name}' WHERE id = ${rowId}`;
-    }
-    else{
-        sql = `UPDATE assets SET name = '${name}', sn= '${sn}' WHERE id = ${rowId}`;
+    if (!rowId) {
+        console.error("Row ID is missing");
+        return;
     }
 
-    db.run(sql,[],(err)=>{
-        if(err) return console.error(err.message);
-    })
-    console.log("Asset Row is edited")
-    rowId = null
+    let sql = "UPDATE assets SET ";
+    const params = [];
 
+    if (name !== '') {
+        sql += "name = ?, ";
+        params.push(name);
+    }
+
+    if (sn !== '') {
+        sql += "sn = ?, ";
+        params.push(sn);
+    }
+
+    if (userId !== '') {
+        sql += "userId = ?, ";
+        params.push(userId);
+    }
+
+    if (dateAdded !== '') {
+        sql += "dateAdded = ?, ";
+        params.push(dateAdded);
+    }
+
+    // Remove the trailing comma and space
+    sql = sql.slice(0, -2);
+
+    sql += ` WHERE id = ?`;
+    params.push(rowId);
+
+    db.run(sql, params, (err) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            console.log("Asset Row is edited");
+        }
+    });
+
+    rowId = null;
 });
+
+
 
 
 //edit user data 

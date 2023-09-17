@@ -15,8 +15,6 @@ contextBridge.exposeInMainWorld('htmlChange',{
     
 })
 
-
-
 contextBridge.exposeInMainWorld('sqlite',{
     queryDB:(query, params, callback) =>{
         const db = new sqlite3.Database(path.join(__dirname,'./test.db'))
@@ -78,6 +76,17 @@ contextBridge.exposeInMainWorld('popUserDrop', (callback)=>{
         callback(rows)
     })
 })
+
+contextBridge.exposeInMainWorld('fetchUserData', ()=>{
+    try {
+        // Make an asynchronous request to the main process to fetch user data
+        const userData = ipcRenderer.invoke('fetchUserData');
+        return userData;
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        throw error;
+      }
+    })
 
 //used to display messageboxes
 contextBridge.exposeInMainWorld('message',{
