@@ -14,16 +14,21 @@ document.addEventListener('DOMContentLoaded', () => {
             <td>${row.userName}</td>
             <td>${row.dateAdded}</td>
         `;
+    
+        // Add data attributes for userId and un (not visible)
+        tr.setAttribute('data-userid', row.userId);
+        tr.setAttribute('data-un', row.un);
+    
         tr.addEventListener('click', () => {
           var row_id = row.id;
           setRowID(row_id);
-          const clickedRow = event.target.closest('tr')
-  
+          const clickedRow = event.target.closest('tr');
+    
           if (clickedRow && clickedRow !== selectedRow) {
             if (selectedRow) {
               selectedRow.classList.remove('is-selected');
             }
-  
+    
             clickedRow.classList.add('is-selected');
             selectedRow = clickedRow;
           }
@@ -31,16 +36,17 @@ document.addEventListener('DOMContentLoaded', () => {
         tableBody.appendChild(tr);
       });
     }
+    
   
     function filterTable(searchText) {
       const rows = tableBody.querySelectorAll('tr');
-  
       rows.forEach(row => {
-        const rowText = row.textContent.toLowerCase();
+        const rowText = `${row.textContent.toLowerCase()} ${row.dataset.userid} ${row.dataset.un}`;
         if (rowText.includes(searchText.toLowerCase())) {
-          row.style.display = '';
-        } else {
-          row.style.display = 'none';
+          row.style.display = ''; // Show the row
+        } 
+        else {
+          row.style.display = 'none'; // Hide the row
         }
       });
     }
@@ -50,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
       filterTable(searchText);
     });
   
-    window.sqlite.queryDB('SELECT assets.id, assets.name AS assetName, assets.sn, assets.dateAdded, users.name AS userName FROM assets LEFT JOIN users ON assets.userId = users.un', [], data => {
+    window.sqlite.queryDB('SELECT assets.id, assets.name AS assetName, assets.sn, assets.dateAdded, users.name AS userName, users.un, assets.userId FROM assets LEFT JOIN users ON assets.userId = users.un', [], data => {
       populateAssetTable(data);
     });
   });
@@ -69,16 +75,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnRemove = document.getElementById('btnRemove');
   btnRemove.addEventListener('click', () => {
     if (rowId !== null) {
-      window.sqlite.deleteRow('assets', rowId);
-      rowId = null;
-      const nBody = 'Asset was Deleted!';
-      window.message.show(nBody);
-      location.reload();
-    } else {
+      const confirmed = confirm('Are you sure you want to delete this record?', );
+  
+      if (confirmed) {
+        window.sqlite.deleteRow('assets', rowId);
+        rowId = null;
+        location.reload();
+      }
+    } 
+    else {
       window.message.show('nothing');
     }
     rowId = null;
   });
+  
+
   
   const btnEdit = document.getElementById('btnEdit');
   btnEdit.addEventListener('click', () => {

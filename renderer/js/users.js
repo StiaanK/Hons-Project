@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let selectedRow = null;
 
   // Function to populate the table with data
-  function populateUserTable(data) {
+    function populateUserTable(data) {
       tableBody.innerHTML = '';
       data.forEach(row => {
           const tr = document.createElement('tr');
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
           });
           tableBody.appendChild(tr);
       });
-  }
+    }
 
   // Function to filter the table based on search text
   function filterTable(searchText) {
@@ -47,8 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
               row.style.display = 'none'; // Hide the row
           }
       });
-  }
-
+    }   
   // Add an event listener to the search input field
   inSearch.addEventListener('input', () => {
       const searchText = inSearch.value.trim();
@@ -75,18 +74,21 @@ btnInsert.addEventListener('click', () => {
 
 // Remove a record
 const btnRemove = document.getElementById('btnRemove');
-btnRemove.addEventListener('click', () => {
-  if (rowId !== null) {
-      window.sqlite.deleteRow('users', rowId);
-      rowId = null;
-      const nBody = 'User was Deleted!';
-      window.message.show(nBody);
-      location.reload();
-  } else {
+  btnRemove.addEventListener('click', () => {
+    if (rowId !== null) {
+      const confirmed = confirm('Are you sure you want to delete this record?', );
+  
+      if (confirmed) {
+        window.sqlite.deleteRow('users', rowId);
+        rowId = null;
+        location.reload();
+      }
+    } 
+    else {
       window.message.show('nothing');
-  }
-  rowId = null;
-});
+    }
+    rowId = null;
+  });
 
 // Edit a record
 const btnEdit = document.getElementById('btnEdit');

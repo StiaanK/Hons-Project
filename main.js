@@ -5,7 +5,6 @@ const path = require('path')
 const sqlite3 = require('sqlite3').verbose()
 
 let sql;
-let tableName;
 
 //connect to db
 const db = new sqlite3.Database('./test.db',sqlite3.OPEN_READWRITE,(err)=>{
@@ -57,7 +56,8 @@ function createMainWindow(){
             buttons: ['OK']
         })
     })
-   
+
+    
     //htmlChange for Assets
     ipcMain.handle('goToAssets',async(event,goToAssets)=>{
         mainWindow.loadFile(path.join(__dirname,'./renderer/assets.html'));
@@ -119,10 +119,12 @@ ipcMain.on('sendAssetData', (event, data) => {
 
     const  name  = data.name;
     const sn = data.sn
+    const userId = data.userId
     const dateAdded = data.dateAdded
-    const sql = `INSERT INTO assets (name, sn, dateAdded) VALUES (?,?,?)`;
+    
+    const sql = `INSERT INTO assets (name, sn, userId, dateAdded) VALUES (?,?,?,?)`;
 
-    db.run(sql, [name,sn,dateAdded], (err) => {
+    db.run(sql, [name,sn, userId, dateAdded], (err) => {
         if (err) {
             console.error('Error inserting data:', err.message);
             event.reply('insertDataResponse', { success: false, error: err.message });
@@ -250,9 +252,3 @@ ipcMain.on('editUserData', (event, data) => {
     rowId = null
 
 });
-
-/*/populate User dropdown menu
-ipcMain.handle('popUserDrop',async(event,popUserDrop)=>{
-    
-})*/
-

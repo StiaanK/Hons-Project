@@ -18,10 +18,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const name = form.inName.value;
         const sn = form.inSN.value;
+        const userId = form.inUserId.value;
         const dateAdded = form.inDate.value; // Get the date value
 
         // Call the exposed `insertData` method from the preload.js file
-        window.sendAssetData({ name, sn, dateAdded }); // Pass the date to the function
+        window.sendAssetData({ name, sn, userId, dateAdded }); // Pass the date to the function
 
         // Reset the form
         form.reset();

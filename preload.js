@@ -92,5 +92,7 @@ contextBridge.exposeInMainWorld('fetchUserData', ()=>{
 contextBridge.exposeInMainWorld('message',{
     show: (message) =>{
         ipcRenderer.send('showMessageBox', message);
-    }
+    },
 })
+
+
