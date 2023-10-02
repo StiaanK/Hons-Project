@@ -6,35 +6,20 @@ const sqlite3 = require('sqlite3').verbose()
 
 let sql;
 
-//connect to db
+//connecting to database
 const db = new sqlite3.Database('./test.db',sqlite3.OPEN_READWRITE,(err)=>{
     if (err) return console.error(err.message)
 })
 
 
-//function to make pop windows
-/*function createPopupWindow(){
-    const popupWindow = new BrowserWindow({
-        title: 'Pop-Up',
-        width:  400,
-        height: 250,
-        webPreferences: {
-           preload: path.join(__dirname,'preload.js'),
-           nodeIntegration: true
-        }
-        
-    })
-    popupWindow.loadFile(path.join(__dirname,'./renderer/addAssets.html'))
-} */
 
-
-//function to make app window
+// Function to create the main window of the Electron app
 function createMainWindow(){
     //making main window
     const mainWindow = new BrowserWindow({
         title: 'Asset Manager',
-        width:  1000,
-        height: 500,
+        width:  1920,
+        height: 1080,
         webPreferences: {
            preload: path.join(__dirname,'preload.js'),
            nodeIntegration: true
@@ -42,12 +27,11 @@ function createMainWindow(){
         
     });
     
-
+    // Load the main HTML file into the main window
     mainWindow.loadFile(path.join(__dirname,'./renderer/index.html'));
-    mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();  //uncomment to assist with development
     
-
-    //show a messagebox
+    // IPC listener to show a message box when called, receives a message when called
     ipcMain.on('showMessageBox', (event, message) =>{
         dialog.showMessageBox(mainWindow, {
             type: 'info',
@@ -56,9 +40,9 @@ function createMainWindow(){
             buttons: ['OK']
         })
     })
-
     
-    //htmlChange for Assets
+    //IPC handlers for changing HTML views based on user actions
+    //htmlChange for Assets pages
     ipcMain.handle('goToAssets',async(event,goToAssets)=>{
         mainWindow.loadFile(path.join(__dirname,'./renderer/assets.html'));
         console.log("assets")
@@ -75,7 +59,7 @@ function createMainWindow(){
         console.log("editAssets")
     })
 
-    //htmlChange for Users
+    //htmlChange for Users pages
     ipcMain.handle('goToUsers',async(event,goToUsers)=>{
         mainWindow.loadFile(path.join(__dirname,'./renderer/users.html'));
         console.log("users")
@@ -94,10 +78,11 @@ function createMainWindow(){
 }
 
 
-//running app
+//Function to run the app
 app.whenReady().then(()=>{
     createMainWindow()
 
+    // Activate the app when no windows are open
     app.on('activate',()=>{
         if (BrowserWindow.getAllWindows().length ===0){
             createMainWindow()
@@ -106,14 +91,14 @@ app.whenReady().then(()=>{
 
 })
 
-//closing app on Macs
+//Close the app on Macs
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin'){
         app.quit()
     }
 })
 
-//add data to assets table
+//IPC listner to add data to the assets table in the database, when called
 ipcMain.on('sendAssetData', (event, data) => {
     console.log('Data received from renderer:', data);
 
@@ -155,14 +140,20 @@ ipcMain.on('sendUserData', (event, data) => {
 })
 
 //delete a row
-ipcMain.on('deleteRow', (event,{ tableName, rowId})=>{
-    sql =`DELETE FROM ${tableName} WHERE id = ${rowId} `
-
-    db.run(sql,[],(err)=>{
-        if(err) return console.error(err.message);
-    })
-    console.log("Row is deleted from" + tableName)
-})
+ipcMain.on('deleteRow', (event, { tableName, rowId }) => {
+    const sql = 'DELETE FROM ' + tableName + ' WHERE id = ?';
+  
+    db.run(sql, [rowId], (err) => {
+      if (err) {
+        console.error(err.message);
+        event.sender.send('deleteRowResponse', { success: false, error: err.message });
+      } else {
+        console.log('Row is deleted from ' + tableName);
+        event.sender.send('deleteRowResponse', { success: true });
+      }
+    });
+  });
+  
 
 
 

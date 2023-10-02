@@ -54,6 +54,14 @@ document.addEventListener('DOMContentLoaded', () => {
       filterTable(searchText);
   });
 
+  // Add an event listener to clear the search bar content and reset the table filter
+  const clearSearchButton = document.getElementById('clearSearch');
+  clearSearchButton.addEventListener('click', () => {
+    const searchText = ''; // Clear the search bar content
+    document.getElementById('inSearch').value = ''; // Update the search bar display
+    filterTable(searchText); // Reset the table filter
+  });
+
   // Query the database and populate the table
   window.sqlite.queryDB('SELECT * FROM users', [], data => {
       populateUserTable(data);
@@ -73,22 +81,32 @@ btnInsert.addEventListener('click', () => {
 });
 
 // Remove a record
+const confirmationModal = document.getElementById('confirmationModal');
+
 const btnRemove = document.getElementById('btnRemove');
-  btnRemove.addEventListener('click', () => {
-    if (rowId !== null) {
-      const confirmed = confirm('Are you sure you want to delete this record?', );
-  
-      if (confirmed) {
-        window.sqlite.deleteRow('users', rowId);
-        rowId = null;
-        location.reload();
-      }
-    } 
-    else {
-      window.message.show('nothing');
-    }
+btnRemove.addEventListener('click', (event) => {
+  event.preventDefault();  // Prevent default behavior
+  event.stopPropagation();  // Stop event propagation
+
+  if (rowId !== null) {
+    confirmationModal.style.display = 'block';
+  } else {
+    window.message.show('Nothing was selected');
+  }
+});
+
+document.getElementById('cancelDelete').addEventListener('click', () => {
+  confirmationModal.style.display = 'none';
+});
+
+document.getElementById('confirmDelete').addEventListener('click', () => {
+  if (rowId !== null) {
+    window.sqlite.deleteRow('users', rowId);
     rowId = null;
-  });
+    location.reload();
+  }
+  confirmationModal.style.display = 'none';
+});
 
 // Edit a record
 const btnEdit = document.getElementById('btnEdit');
