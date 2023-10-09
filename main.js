@@ -29,7 +29,7 @@ function createMainWindow(){
     
     // Load the main HTML file into the main window
     mainWindow.loadFile(path.join(__dirname,'./renderer/index.html'));
-    mainWindow.webContents.openDevTools();  //uncomment to assist with development
+    //mainWindow.webContents.openDevTools();  //uncomment to assist with development
     
     // IPC listener to show a message box when called, receives a message when called
     ipcMain.on('showMessageBox', (event, message) =>{
