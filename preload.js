@@ -1,21 +1,28 @@
+// Import necessary modules
 const path = require('path')
 const {contextBridge, ipcRenderer} = require('electron');
 const { channel } = require('diagnostics_channel');
 const sqlite3 = require('sqlite3').verbose();
 
-
+// Expose functions to the renderer process related to HTML changes
 contextBridge.exposeInMainWorld('htmlChange',{
+    // Function to navigate to assets
     goToAssets: () => ipcRenderer.invoke('goToAssets','goToAssets'),
+    // Function to navigate to users
     goToUsers: ()=> ipcRenderer.invoke('goToUsers','goToUsers'),
-    goToBookings: () => ipcRenderer.invoke('goToBookings', 'goToBookings'),
+    // Function to navigate to add assets
     goToAddAssets: ()=> ipcRenderer.invoke('goToAddAssets','goToAddAssets'), 
+    // Function to navigate to edit assets
     goToEditAssets: () => ipcRenderer.invoke('goToEditAssets','goToEditAssets'),
+    // Function to navigate to add users
     goToAddUsers: () =>ipcRenderer.invoke('goToAddUsers','goToAddUsers'), 
+    // Function to navigate to edit users
     goToEditUsers: () => ipcRenderer.invoke('goToEditUsers','goToEditUsers'),
-    
 })
 
+// Expose functions related to SQLite database operations
 contextBridge.exposeInMainWorld('sqlite',{
+    // Function to execute a query on the database
     queryDB:(query, params, callback) =>{
         const db = new sqlite3.Database(path.join(__dirname,'./test.db'))
 
@@ -28,55 +35,40 @@ contextBridge.exposeInMainWorld('sqlite',{
         })
     },
     
+    // Function to delete a row in the database
     deleteRow: (tableName, rowId) => {
         ipcRenderer.send('deleteRow', {tableName, rowId})  
     },
-
 })
 
-//send data to main to add to asset table
+// Expose functions to send and receive data for asset operations
 contextBridge.exposeInMainWorld('sendAssetData', (data) => {
     ipcRenderer.send('sendAssetData', data);
 })
-
-//send data to main to edit an asset record
 contextBridge.exposeInMainWorld('editAssetData',(data) =>{
     ipcRenderer.send('editAssetData', data);
 })
 
-//send data to main to add to user table
+// Expose functions to send and receive data for user operations
 contextBridge.exposeInMainWorld('sendUserData', (data) => {
     ipcRenderer.send('sendUserData', data);
 })
-
-//send data to main to edit an user record
 contextBridge.exposeInMainWorld('editUserData',(data) =>{
     ipcRenderer.send('editUserData', data);
 })
 
+// Expose functions to send and receive IDs
 contextBridge.exposeInMainWorld('sendId', (data) => {
     ipcRenderer.send('sendId',data)
 })
-
 contextBridge.exposeInMainWorld('recieveId', (callback)=>{
     ipcRenderer.on('recieveId', (event, data) =>{
         console.log(data + " preload")
         callback(data)
     })
-
 })
 
-contextBridge.exposeInMainWorld('popUserDrop', (callback)=>{
-    const db = new sqlite3.Database(path.join(__dirname,'./test.db'))
-    db.all('SELECT name FROM users', (err,rows)=>{
-        if(err){
-            console.error(err.message)
-            return
-        }
-        callback(rows)
-    })
-})
-
+// Expose function to fetch user data
 contextBridge.exposeInMainWorld('fetchUserData', ()=>{
     try {
         // Make an asynchronous request to the main process to fetch user data
@@ -88,11 +80,9 @@ contextBridge.exposeInMainWorld('fetchUserData', ()=>{
       }
     })
 
-//used to display messageboxes
+// Expose function to display message boxes
 contextBridge.exposeInMainWorld('message',{
     show: (message) =>{
         ipcRenderer.send('showMessageBox', message);
     },
 })
-
-

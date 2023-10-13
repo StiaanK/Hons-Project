@@ -1,25 +1,28 @@
+// Event listener for when the DOM content is loaded
 document.addEventListener('DOMContentLoaded', () => {
   // DOM elements
-  const tableBody = document.querySelector('#dataTable tbody');
-  const inSearch = document.querySelector('#inSearch');
-  let selectedRow = null;
+  const tableBody = document.querySelector('#dataTable tbody'); // Reference to the table body
+  const inSearch = document.querySelector('#inSearch'); // Reference to the search input field
+  let selectedRow = null; // Variable to store the selected row in the table
 
   // Function to populate the asset table
   function populateAssetTable(data) {
+    // Clear the table body
     tableBody.innerHTML = '';
     data.forEach(row => {
-      const tr = document.createElement('tr');
+      // Calculate asset age in years
       const dateAdded = new Date(row.dateAdded);
       const currentDate = new Date();
       const ageInYears = currentDate.getFullYear() - dateAdded.getFullYear();
 
-      // Populate table row
+      // Create a table row and populate it with data
+      const tr = document.createElement('tr');
       tr.innerHTML = `
           <td>${row.id}</td>
           <td>${row.assetName}</td>
           <td>${row.sn}</td>
-          <td>${row.userName || 'Unbooked'}</td> <!-- Display 'Unbooked' if userName is null -->
-          <td>${ageInYears}</td> <!-- Display the age of the asset in years -->
+          <td>${row.userName || 'Unbooked'}</td>
+          <td>${ageInYears}</td>
           <td>${row.dateAdded}</td>
       `;
 
@@ -27,12 +30,13 @@ document.addEventListener('DOMContentLoaded', () => {
       tr.setAttribute('data-userid', row.userId);
       tr.setAttribute('data-un', row.un);
 
-      // Event listener for row click
+      // Event listener for row click to select the row
       tr.addEventListener('click', () => {
         var row_id = row.id;
-        setRowID(row_id);
+        setRowID(row_id); // Set the selected row ID
         const clickedRow = event.target.closest('tr');
 
+        // Handle row selection
         if (clickedRow && clickedRow !== selectedRow) {
           if (selectedRow) {
             selectedRow.classList.remove('is-selected');
@@ -41,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
           selectedRow = clickedRow;
         }
       });
-      tableBody.appendChild(tr);
+      tableBody.appendChild(tr); // Append the row to the table
     });
   }
 
@@ -60,8 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Event listener for search input
   inSearch.addEventListener('input', () => {
-    const searchText = inSearch.value.trim(); // getting search text
-    filterTable(searchText); //adding search filter
+    const searchText = inSearch.value.trim(); // Get the search text
+    filterTable(searchText); // Filter the table based on the search text
   });
 
   // Event listener to clear the search bar content and reset the table filter
@@ -72,19 +76,19 @@ document.addEventListener('DOMContentLoaded', () => {
     filterTable(searchText); // Reset the table filter
   });
 
-  // Function to show assets without a null user ID
+  // Function to show assets with non-null userID
   function showBookings() {
     const rows = tableBody.querySelectorAll('tr');
     rows.forEach(row => {
       const userId = row.dataset.userid;
-      if (userId !== 'null') {
-        row.style.display = ''; // Show the row if userID is not null
+      if (userId !== 'null' && userId !== undefined && userId !=='' &&  userId !==' ') {
+        row.style.display = ''; // Show the row if userID is not null or undefined
       } else {
-        row.style.display = 'none'; // Hide the row if userID is null
+        row.style.display = 'none'; // Hide the row if userID is null or undefined
       }
     });
   }
-
+  
   // Function to show assets older than 5 years
   function showOldAssets() {
     const rows = tableBody.querySelectorAll('tr');
@@ -111,13 +115,13 @@ document.addEventListener('DOMContentLoaded', () => {
     showBookings(); // Call the function to show assets with non-null userID
   });
 
-  // Fetch data and populate table
+  // Fetch data and populate the table
   window.sqlite.queryDB('SELECT assets.id, assets.name AS assetName, assets.sn, assets.dateAdded, users.name AS userName, users.un, assets.userId FROM assets LEFT JOIN users ON assets.userId = users.un', [], data => {
     populateAssetTable(data);
   });
 });
 
-// Function to set row ID
+// Function to set the selected row ID
 let rowId = null;
 function setRowID(e) {
   rowId = e;
@@ -126,9 +130,8 @@ function setRowID(e) {
 // Event listeners for various buttons
 const btnInsert = document.getElementById('btnInsert');
 btnInsert.addEventListener('click', () => {
-  window.htmlChange.goToAddAssets();
+  window.htmlChange.goToAddAssets(); // Navigate to the 'Add Assets' page
 });
-
 
 const confirmationModal = document.getElementById('confirmationModal');
 
@@ -138,36 +141,32 @@ btnRemove.addEventListener('click', (event) => {
   event.stopPropagation();  // Stop event propagation
 
   if (rowId !== null) {
-    confirmationModal.style.display = 'block';
+    confirmationModal.style.display = 'block'; // Display confirmation modal for row deletion
   } else {
     window.message.show('Nothing was selected');
   }
 });
 
 document.getElementById('cancelDelete').addEventListener('click', () => {
-  confirmationModal.style.display = 'none';
+  confirmationModal.style.display = 'none'; // Close the confirmation modal
 });
 
 document.getElementById('confirmDelete').addEventListener('click', () => {
   if (rowId !== null) {
-    window.sqlite.deleteRow('assets', rowId);
+    window.sqlite.deleteRow('assets', rowId); // Delete the selected row from the database
     rowId = null;
-    location.reload();
+    location.reload(); // Reload the page after deletion
   }
-  confirmationModal.style.display = 'none';
+  confirmationModal.style.display = 'none'; // Close the confirmation modal
 });
-
-
-
-
 
 const btnEdit = document.getElementById('btnEdit');
 btnEdit.addEventListener('click', () => {
   if (rowId !== null) {
-    window.sendId(rowId);
-    window.htmlChange.goToEditAssets();
+    window.sendId(rowId); // Send the selected row ID to the editing page
+    window.htmlChange.goToEditAssets(); // Navigate to the 'Edit Assets' page
   } else {
     window.message.show('nothing');
   }
-  rowId = null;
+  rowId = null; // Reset the selected row ID
 });

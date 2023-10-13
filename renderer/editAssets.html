@@ -5,13 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Test</title>
+    <!-- Include Bulma CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <!-- Include Font Awesome CSS -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 </head>
 <body>
+    <!-- Heading for editing an asset -->
     <h4 class="title is-4">Edit an Asset</h4>
     <form id="form-Asset">
         <div>
+            <!-- Input fields for asset information -->
             <label class="label">Asset Name</label><input type="text" class="input" id="inName" style="width: 200px;">
             <label class="label">Asset Serial Number</label> <input id="inSN" class="input" type="text" style="width: 200px;">
             <label class="label">Date Added:</label><input type="date" class="input" id="inDate" style="width: 200px;">
@@ -20,13 +24,15 @@
 
         <div>
             <p class="mt-2">
+                <!-- Button to submit and edit record -->
                 <button id="btnEdit" type="submit" class="button">Edit record</button>
             </p>
         </div>
     </form>
+    <!-- Button to cancel the edit action -->
     <button id="btnCancel" class="button">Cancel</button>
 
+    <!-- Include JavaScript file for editing asset logic -->
     <script defer src="./js/editAssets.js"></script>
-    <!--<script defer src="./js/addAssets.js"></script>-->
 </body>
 </html>

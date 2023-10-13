@@ -43,34 +43,40 @@ function createMainWindow(){
     
     //IPC handlers for changing HTML views based on user actions
     //htmlChange for Assets pages
+    // Main asset Page 
     ipcMain.handle('goToAssets',async(event,goToAssets)=>{
         mainWindow.loadFile(path.join(__dirname,'./renderer/assets.html'));
         console.log("assets")
         tableName="assets"
     })
 
+    // Add asset page
     ipcMain.handle('goToAddAssets',async(event, goToAddAssets)=>{
         mainWindow.loadFile(path.join(__dirname,'./renderer/addAssets.html'));
         console.log("addAssets")
     })
 
+    // Edit asset page
     ipcMain.handle('goToEditAssets',async(event,goToEditAssets)=>{
         mainWindow.loadFile(path.join(__dirname,'./renderer/editAssets.html'));
         console.log("editAssets")
     })
 
     //htmlChange for Users pages
+    // Main Users page
     ipcMain.handle('goToUsers',async(event,goToUsers)=>{
         mainWindow.loadFile(path.join(__dirname,'./renderer/users.html'));
         console.log("users")
         tableName="users"
     })
 
+    // Add Users page 
     ipcMain.handle('goToAddUsers',async(event, goToAddUsers)=>{
         mainWindow.loadFile(path.join(__dirname,'./renderer/addUsers.html'));
         console.log("addUsers")
     })
 
+    // Edit Users page
     ipcMain.handle('goToEditUsers',async(event,goToEditUsers)=>{
         mainWindow.loadFile(path.join(__dirname,'./renderer/editUsers.html'));
         console.log("editUsers")
@@ -98,17 +104,20 @@ app.on('window-all-closed', () => {
     }
 })
 
-//IPC listner to add data to the assets table in the database, when called
+// IPC listner to add data to the assets table in the database, when called
 ipcMain.on('sendAssetData', (event, data) => {
     console.log('Data received from renderer:', data);
 
+    // assigning data to variables
     const  name  = data.name;
     const sn = data.sn
     const userId = data.userId
     const dateAdded = data.dateAdded
     
+    // Use a parameterized query to prevent SQL injection
     const sql = `INSERT INTO assets (name, sn, userId, dateAdded) VALUES (?,?,?,?)`;
 
+    // Running the parameterized SQL statement
     db.run(sql, [name,sn, userId, dateAdded], (err) => {
         if (err) {
             console.error('Error inserting data:', err.message);
@@ -120,15 +129,19 @@ ipcMain.on('sendAssetData', (event, data) => {
     });
 })
 
-//add data to users table
+// Add data to users table
 ipcMain.on('sendUserData', (event, data) => {
     console.log('Data received from renderer:', data);
 
-    const  name  = data.name;
-    const un = data.un
-    const sql = `INSERT INTO users (name, un) VALUES (?,?)`;
+    // assigning data to variables
+    const name = data.name;
+    const un = data.un;
 
-    db.run(sql, [name,un], (err) => {
+    // Use a parameterized query to prevent SQL injection
+    const sql = 'INSERT INTO users (name, un) VALUES (?, ?)';
+
+    // Running the parameterized SQL statement
+    db.run(sql, [name, un], (err) => {
         if (err) {
             console.error('Error inserting data:', err.message);
             event.reply('insertDataResponse', { success: false, error: err.message });
@@ -137,26 +150,31 @@ ipcMain.on('sendUserData', (event, data) => {
             event.reply('insertDataResponse', { success: true });
         }
     });
-})
+});
+
 
 //delete a row
 ipcMain.on('deleteRow', (event, { tableName, rowId }) => {
+    // Construct SQL statement with a parameter placeholder for id
     const sql = 'DELETE FROM ' + tableName + ' WHERE id = ?';
-  
+
+    // Use a parameterized query to prevent SQL injection
     db.run(sql, [rowId], (err) => {
-      if (err) {
-        console.error(err.message);
-        event.sender.send('deleteRowResponse', { success: false, error: err.message });
-      } else {
-        console.log('Row is deleted from ' + tableName);
-        event.sender.send('deleteRowResponse', { success: true });
-      }
+        if (err) {
+            // Handle errors during deletion
+            console.error(err.message);
+            event.sender.send('deleteRowResponse', { success: false, error: err.message });
+        } else {
+            // Log successful deletion
+            console.log('Row is deleted from ' + tableName);
+            event.sender.send('deleteRowResponse', { success: true });
+        }
     });
-  });
+});
+
   
 
-
-
+// Recieving rowId from renderer when a record is selected, used for editing
 let rowId
 ipcMain.on('sendId', (event, data) => {
     rowId = data
@@ -168,13 +186,15 @@ ipcMain.on('sendId', (event, data) => {
 ipcMain.on('editAssetData', (event, data) => {
     console.log('Data received from renderer:', data);
 
-    const { name, sn, userId, dateAdded } = data;
+    // Extracting data from the input
+    const { name, sn, userId, dateAdded} = data;
 
     if (!rowId) {
         console.error("Row ID is missing");
         return;
     }
 
+    // Initialize the SQL statement and parameters array
     let sql = "UPDATE assets SET ";
     const params = [];
 
@@ -201,9 +221,11 @@ ipcMain.on('editAssetData', (event, data) => {
     // Remove the trailing comma and space
     sql = sql.slice(0, -2);
 
+    // Add the WHERE clause with parameter placeholder for rowId
     sql += ` WHERE id = ?`;
     params.push(rowId);
 
+    // Use a parameterized query to prevent SQL injection
     db.run(sql, params, (err) => {
         if (err) {
             console.error(err.message);
@@ -212,34 +234,49 @@ ipcMain.on('editAssetData', (event, data) => {
         }
     });
 
+    // Reset rowId to null
     rowId = null;
 });
-
-
-
 
 //edit user data 
 ipcMain.on('editUserData', (event, data) => {
     console.log('Data received from renderer:', data);
 
-    const  name  = data.name;
-    const un = data.un
-    var sql = ``;
+    const { name, un} = data;
 
-    if(name ==''){
-        sql = `UPDATE users SET un= '${un}' WHERE id = ${rowId}`;
-    }
-    else if(un==''){
-        sql = `UPDATE users SET name = '${name}' WHERE id = ${rowId}`;
-    }
-    else{
-        sql = `UPDATE users SET name = '${name}', un= '${un}' WHERE id = ${rowId}`;
+    if (!rowId) {
+        console.error("Row ID is missing");
+        return;
     }
 
-    db.run(sql,[],(err)=>{
-        if(err) return console.error(err.message);
-    })
-    console.log("User Row is edited")
-    rowId = null
+    let sql = "UPDATE users SET ";
 
+    // Initialize an array to hold the parameters
+    const params = [];
+
+    if (name !== '') {
+        sql += "name = ?, ";
+        params.push(name);  // Add name to the parameters array
+    }
+
+    if (un !== '') {
+        sql += "un = ?, ";
+        params.push(un);  // Add un to the parameters array
+    }
+
+    // Remove the trailing comma and space
+    sql = sql.slice(0, -2);
+
+    // Add the WHERE clause with a parameter placeholder for rowId
+    sql += " WHERE id = ?";
+    params.push(rowId);  // Add rowId to the parameters array
+
+    // Use a parameterized query to prevent SQL injection
+    db.run(sql, params, (err) => {
+        if (err) {
+            return console.error(err.message);
+        }
+        console.log("User Row is edited");
+        rowId = null;
+    });
 });

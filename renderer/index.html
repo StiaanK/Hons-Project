@@ -5,48 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Test</title>
+    <!-- Include Bulma CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <!-- Include Font Awesome CSS -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-
   </head>
   
   <body>
-    <!-- dropdown-->
+    <!-- Dropdown for selecting a table -->
     <div class="dropdown"> 
-      <button  class="button is-large" aria-haspopup="true" aria-controls="dropdown-menu3"> 
-      <div class="dropdown-trigger">
-        <span> Select a table</table> </span>
-        <span class="icon is-small">
-          <i class="fas fa-angle-down" aria-hidden="true"></i>
-        </span>
+      <button class="button is-large" aria-haspopup="true" aria-controls="dropdown-menu3"> 
+        <div class="dropdown-trigger">
+          <!-- Dropdown trigger content -->
+          <span>Select a table</span>
+          <span class="icon is-small">
+            <i class="fas fa-angle-down" aria-hidden="true"></i>
+          </span>
+        </div>
+        <div class="dropdown-menu" id="dropdown-menu3" role="menu">
+          <div class="dropdown-content">
+            <!-- Dropdown content items (Assets and Users) -->
+            <a id="selectAssets" href="#" class="dropdown-item">
+              Assets
+            </a>
+            <a id="selectUsers" href="#" class="dropdown-item">
+              Users
+            </a>
+          </div>
+        </div>
+      </button>
     </div>
-    <div class="dropdown-menu" id="dropdown-menu3" role="menu">
-      <div class="dropdown-content">
-        <a id="selectAssets" href="#" class="dropdown-item">
-          Assets
-        </a>
-        <a id="selectUsers" href="#" class="dropdown-item">
-          Users
-        </a>
-      </div></button>
-    </div>
-  <div> 
-</div>
-<script>
-  //used for the dropdown
-  var dropdown = document.querySelector('.dropdown');
-  dropdown.addEventListener('click', function(event) {
-    event.stopPropagation();
-    dropdown.classList.toggle('is-active');
-  });
-</script>
-<!-- End of dropdown-->
 
-    <!--<div>
-      <p class="mb-2">
-        <button id="btnNew" class="button" >New Window</button>
-      </p>
-    </div>-->
+    <script>
+      // JavaScript to handle dropdown interaction
+      var dropdown = document.querySelector('.dropdown');
+      dropdown.addEventListener('click', function(event) {
+        event.stopPropagation();
+        dropdown.classList.toggle('is-active');
+      });
+    </script>
+    <!-- End of dropdown -->
+    <!-- Include JavaScript file for window change logic -->
     <script defer src="./js/winChange.js"></script>
   </body> 
 </html>

@@ -6,11 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Asset Management</title>
+  <!-- Include Bulma CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <!-- Include Font Awesome CSS -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
     integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
     crossorigin="anonymous">
   <style>
+    /* Custom CSS styles */
     .table-container {
       max-height: 450px;
       /* Adjust this value as needed */
@@ -20,11 +23,13 @@
 </head>
 
 <body>
+  <!-- Section for asset selection dropdown and search input -->
   <section class="section">
     <div class="container">
       <div class="columns is-mobile">
         <div class="column is-half">
           <div class="field">
+            <!-- Dropdown for selecting asset or user -->
             <div class="dropdown">
               <div class="dropdown-trigger">
                 <button class="button is-large" aria-haspopup="true" aria-controls="dropdown-menu3">
@@ -36,6 +41,7 @@
               </div>
               <div class="dropdown-menu" id="dropdown-menu3" role="menu">
                 <div class="dropdown-content">
+                  <!-- Dropdown content -->
                   <a id="selectAssets" href="#" class="dropdown-item">Assets</a>
                   <a id="selectUsers" href="#" class="dropdown-item">Users</a>
                 </div>
@@ -45,11 +51,13 @@
         </div>
 
         <div class="column is-half">
+          <!-- Search input -->
           <div class="field has-addons">
             <p class="control is-expanded">
               <input id="inSearch" class="input" type="text" placeholder="Search">
             </p>
             <p class="control">
+              <!-- Button to clear search input -->
               <button id="clearSearch" class="button">
                 <i class="fas fa-times"></i>
               </button>
@@ -60,6 +68,7 @@
     </div>
   </section>
 
+  <!-- Buttons to show old assets, show bookings, and perform other actions -->
   <div class="container">
     <p class="mt-2">
       <button id="btnShowOldAssets" class="button">Show old assets</button>
@@ -67,6 +76,7 @@
     </p>
   </div>
 
+  <!-- Table for displaying asset information -->
   <div class="container">
     <div class="table-container">
       <table id="dataTable" class="table is-hoverable is-striped is-fullwidth">
@@ -87,6 +97,7 @@
     </div>
   </div>
 
+  <!-- Buttons to perform actions like adding, removing, and editing records -->
   <div class="container">
     <p class="mt-2">
       <button id="btnInsert" class="button">Add new record</button>
@@ -95,7 +106,7 @@
     </p>
   </div>
 
-  <!-- Confirmation Modal -->
+  <!-- Confirmation Modal for record deletion -->
   <div id="confirmationModal" class="modal">
     <div class="modal-content">
       <p>Are you sure you want to delete this record?</p>
@@ -104,13 +115,9 @@
     </div>
   </div>
 
+  <!-- JavaScript files for handling UI interactions and logic -->
   <script defer src="./js/winChange.js"></script>
   <script defer src="./js/assets.js"></script>
-
-</body>
-
-</html>
-
 
   <script>
     // JavaScript to handle dropdown interaction
