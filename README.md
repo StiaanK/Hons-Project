@@ -58,7 +58,7 @@ The renderer process comprises HTML and JavaScript files for different views: `a
 
 ## Contributors
 
-- [Stiaan Kleinhans](https://github.com/yourusername) - Initial contributor
+- [Stiaan Kleinhans](https://github.com/StiaanK) - Initial contributor
 
 
 
